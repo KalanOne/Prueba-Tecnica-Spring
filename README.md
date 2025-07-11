@@ -2,10 +2,10 @@
 
 Este proyecto es una API REST desarrollada con Spring Boot que implementa las siguientes características:
 
-- Autenticación mediante JWT con OAuth 2
+- Autenticación mediante JWT y OAuth 2
 - Servicio REST para gestionar un catálogo de items
 - Consumo de la API de Pokémon
-- Servicio de cifrado AES/CBC/PKCS5Padding
+- Servicio de cifrado con AES/CBC/PKCS5Padding
 
 ## Tecnologías utilizadas
 
@@ -31,7 +31,9 @@ Este proyecto es una API REST desarrollada con Spring Boot que implementa las si
 mvn spring-boot:run
 ```
 
-La aplicación estará disponible en: http://localhost:8080
+La aplicación estará disponible en: [http://localhost:8080](http://localhost:8080)
+
+---
 
 ## Endpoints disponibles
 
@@ -39,6 +41,9 @@ La aplicación estará disponible en: http://localhost:8080
 
 - **POST /api/auth/registro**: Registrar un nuevo usuario
 - **POST /api/auth/login**: Iniciar sesión y obtener token JWT
+- **GET /oauth2/authorization/google**: Iniciar autenticación OAuth2 con Google
+
+  > **Nota**: Este endpoint no es ejecutable directamente desde Postman. Para visualizar el flujo completo de autenticación con Google OAuth2 es necesario abrirlo en un navegador.
 
 ### Catálogo de Items
 
@@ -59,12 +64,21 @@ La aplicación estará disponible en: http://localhost:8080
 - **POST /api/cifrado/cifrar**: Cifrar un texto
 - **POST /api/cifrado/descifrar**: Descifrar un texto
 
+---
+
+## Variables de entorno en Postman
+
+Esta colección utiliza una variable de entorno llamada `token`. En algunos entornos puede funcionar sin definirla manualmente, pero si se presentan errores de autorización o acceso denegado, es posible que necesites crear un entorno en Postman y agregar manualmente la variable `token` con el valor del JWT.
+
+---
+
 ## Ejemplos de uso
 
-### Registro de usuario
+> ⚠️ _Se omite el ejemplo de OAuth2 porque debe ejecutarse en el navegador_
+
+### POST /api/auth/registro
 
 ```json
-POST /api/auth/registro
 {
   "nombre": "Juan",
   "apellido": "Pérez",
@@ -74,49 +88,104 @@ POST /api/auth/registro
 }
 ```
 
-### Inicio de sesión
+### POST /api/auth/login
 
 ```json
-POST /api/auth/login
 {
   "username": "juanperez",
   "password": "password123"
 }
 ```
 
-### Filtrar items por nombre
+### POST /api/items/filter
 
 ```json
-POST /api/items/filter
 {
   "nombre": "Laptop"
 }
 ```
 
-### Cifrar texto
+### POST /api/items
 
 ```json
-POST /api/cifrado/cifrar
+{
+  "nombre": "Nuevo Item",
+  "descripcion": "Descripción del nuevo item",
+  "precio": 999.99,
+  "categoria": "Nueva Categoría",
+  "disponible": true
+}
+```
+
+### PUT /api/items/1
+
+```json
+{
+  "nombre": "Item Actualizado",
+  "descripcion": "Descripción actualizada",
+  "precio": 1299.99,
+  "categoria": "Categoría Actualizada",
+  "disponible": true
+}
+```
+
+### POST /api/cifrado/cifrar
+
+```json
 {
   "texto": "Texto a cifrar"
 }
 ```
 
+### POST /api/cifrado/descifrar
+
+```json
+{
+  "texto": "Texto a cifrar"
+}
+```
+
+---
+
+## Mensajes de error
+
+En caso de errores, la API puede devolver respuestas como la siguiente:
+
+```json
+{
+  "timestamp": "2025-07-11T20:24:44.547+00:00",
+  "status": 500,
+  "error": "Internal Server Error",
+  "trace": "java.lang.RuntimeException: El nombre de usuario ya existe\r\n\tat ... ...",
+  "message": "El nombre de usuario ya existe",
+  "path": "/api/auth/registro"
+}
+```
+
+Para errores `404`, es posible que no se retorne contenido en el cuerpo, solo el código HTTP correspondiente. Esto es un comportamiento esperado y no afecta la funcionalidad de la API.
+
+---
+
 ## Acceso a la base de datos H2
 
-La consola de H2 está disponible en: http://localhost:8080/h2-console
+La consola de H2 está disponible en: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
 Datos de conexión:
-- JDBC URL: jdbc:h2:mem:testdb
-- Usuario: sa
-- Contraseña: password
+
+- JDBC URL: jdbc\:h2\:mem\:testdb
+- Usuario: `sa`
+- Contraseña: `password`
+
+---
 
 ## Usuarios predefinidos
 
-1. Administrador
-   - Username: admin
-   - Password: admin123
+1. **Administrador**
 
-2. Usuario normal
-   - Username: user
-   - Password: user123
+   - Username: `admin`
+   - Password: `admin123`
+
+2. **Usuario normal**
+
+   - Username: `user`
+   - Password: `user123`

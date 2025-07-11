@@ -2,216 +2,55 @@
 
 Este documento contiene la evidencia del funcionamiento de la API REST desarrollada para la prueba técnica.
 
-## 1. Autenticación JWT con OAuth 2
+## Autenticación
 
-### Registro de usuario
+- **POST /api/auth/registro**: Registrar un nuevo usuario
+  ![Post Registro](ScreenShots/Post%20Registro.png)
+  <div align="center"><em>Post Registro</em></div>
+- **POST /api/auth/login**: Iniciar sesión y obtener token JWT
+  ![Post Login](ScreenShots/Post%20Login.png)
+  <div align="center"><em>Post Login</em></div>
+- **GET /oauth2/authorization/google**: Iniciar autenticación OAuth2 con Google
+  | ![Get OAuth2 Pantalla 1 (Navegador)](ScreenShots/Get%20OAuth2%20Pantalla%201%20(Navegador).png) | ![Get OAuth2 Pantalla 1 (Navegador)](ScreenShots/Get%20OAuth2%20Pantalla%202%20(Navegador).png) | ![Get OAuth2 Pantalla 3 Respuesta JWT (Navegador)](ScreenShots/Get%20OAuth2%20Pantalla%203%20Respuesta%20JWT%20(Navegador).png) |
+  |:--:|:--:|:--:|
+  | <em>Get OAuth2 Pantalla 1 (Navegador)</em> | <em>Get OAuth2 Pantalla 1 (Navegador)</em> | <em>Get OAuth2 Pantalla 3 Respuesta JWT (Navegador)</em> |
 
-```
-POST /api/auth/registro
 
-Request:
-{
-  "nombre": "Juan",
-  "apellido": "Pérez",
-  "username": "juanperez",
-  "email": "juan@example.com",
-  "password": "password123"
-}
+## Catálogo de Items
 
-Response:
-{
-  "success": true,
-  "message": "Usuario registrado exitosamente"
-}
-```
+- **GET /api/items**: Obtener todos los items
+  ![Get Obetener todos los items](ScreenShots/Get%20Obetener%20todos%20los%20items.png)
+  <div align="center"><em>Get Obetener todos los items</em></div>
+- **GET /api/items/{id}**: Obtener un item por ID
+  ![Get Obtener item por Id](ScreenShots/Get%20Obtener%20item%20por%20Id.png)
+  <div align="center"><em>Get Obtener item por Id</em></div>
+- **POST /api/items/filter**: Filtrar items por diferentes criterios
+  ![Post Filtrar items por nombre](ScreenShots/Post%20Filtrar%20items%20por%20nombre.png)
+  <div align="center"><em>Post Filtrar items por nombre</em></div>
+- **POST /api/items**: Crear un nuevo item
+  ![Post Crear item](ScreenShots/Post%20Crear%20item.png)
+  <div align="center"><em>Post Crear item</em></div>
+- **PUT /api/items/{id}**: Actualizar un item existente
+  ![Put Actualizar item](ScreenShots/Put%20Actualizar%20item.png)
+  <div align="center"><em>Put Actualizar item</em></div>
+- **DELETE /api/items/{id}**: Eliminar un item
+  ![Delete Eliminar item](ScreenShots/Delete%20Eliminar%20item.png)
+  <div align="center"><em>Delete Eliminar item</em></div>
 
-### Login y obtención de token JWT
+## Pokémon API
 
-```
-POST /api/auth/login
+- **GET /api/pokemon/ditto**: Obtener información de Ditto
+  ![Get Obtener Ditto (Pokemon API)](ScreenShots/Get%20Obtener%20Ditto%20(Pokemon%20API).png)
+  <div align="center"><em>Get Obtener Ditto (Pokemon API)</em></div>
+- **GET /api/pokemon/{name}**: Obtener información de un Pokémon por nombre
+  ![Get Obtener Pokemon por nombre (Pokemon API)](ScreenShots/Get%20Obtener%20Pokemon%20por%20nombre%20(Pokemon%20API).png)
+  <div align="center"><em>Get Obtener Pokemon por nombre (Pokemon API)</em></div>
 
-Request:
-{
-  "username": "juanperez",
-  "password": "password123"
-}
+## Servicio de Cifrado
 
-Response:
-{
-  "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwidXNlcm5hbWUiOiJqdWFucGVyZXoiLCJpYXQiOjE2MjYxODcyMDAsImV4cCI6MTYyNjE5MDgwMH0.ejemplo_token_jwt",
-  "tokenType": "Bearer"
-}
-```
-
-## 2. Servicio REST para catálogo de items
-
-### Obtener todos los items
-
-```
-GET /api/items
-
-Response:
-[
-  {
-    "id": 1,
-    "nombre": "Laptop HP",
-    "descripcion": "Laptop HP Pavilion 15 pulgadas",
-    "precio": 12999.99,
-    "categoria": "Electrónica",
-    "disponible": true
-  },
-  {
-    "id": 2,
-    "nombre": "Smartphone Samsung",
-    "descripcion": "Samsung Galaxy S21",
-    "precio": 9999.99,
-    "categoria": "Electrónica",
-    "disponible": true
-  },
-  ...
-]
-```
-
-### Filtrar items por nombre
-
-```
-POST /api/items/filter
-
-Request:
-{
-  "nombre": "Laptop"
-}
-
-Response:
-[
-  {
-    "id": 1,
-    "nombre": "Laptop HP",
-    "descripcion": "Laptop HP Pavilion 15 pulgadas",
-    "precio": 12999.99,
-    "categoria": "Electrónica",
-    "disponible": true
-  }
-]
-```
-
-### Filtrar items sin filtro (devuelve todos)
-
-```
-POST /api/items/filter
-
-Request:
-{
-  "nombre": ""
-}
-
-Response:
-[
-  {
-    "id": 1,
-    "nombre": "Laptop HP",
-    "descripcion": "Laptop HP Pavilion 15 pulgadas",
-    "precio": 12999.99,
-    "categoria": "Electrónica",
-    "disponible": true
-  },
-  {
-    "id": 2,
-    "nombre": "Smartphone Samsung",
-    "descripcion": "Samsung Galaxy S21",
-    "precio": 9999.99,
-    "categoria": "Electrónica",
-    "disponible": true
-  },
-  ...
-]
-```
-
-## 3. Consumo de API de Pokémon
-
-### Obtener información de Ditto
-
-```
-GET /api/pokemon/ditto
-
-Response:
-{
-  "abilities": [
-    {
-      "ability": {
-        "name": "limber",
-        "url": "https://pokeapi.co/api/v2/ability/7/"
-      },
-      "is_hidden": false,
-      "slot": 1
-    },
-    {
-      "ability": {
-        "name": "imposter",
-        "url": "https://pokeapi.co/api/v2/ability/150/"
-      },
-      "is_hidden": true,
-      "slot": 3
-    }
-  ],
-  "base_experience": 101,
-  "forms": [...],
-  "height": 3,
-  "id": 132,
-  "name": "ditto",
-  "species": {...},
-  "sprites": {...},
-  "stats": [...],
-  "types": [...],
-  "weight": 40
-}
-```
-
-## 4. Servicio de Cifrado AES/CBC/PKCS5Padding
-
-### Cifrar texto
-
-```
-POST /api/cifrado/cifrar
-
-Request:
-{
-  "texto": "Este es un texto de prueba para cifrar"
-}
-
-Response:
-{
-  "resultado": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
-}
-```
-
-### Descifrar texto
-
-```
-POST /api/cifrado/descifrar
-
-Request:
-{
-  "texto": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
-}
-
-Response:
-{
-  "resultado": "Este es un texto de prueba para cifrar"
-}
-```
-
-## 5. Consola H2
-
-Acceso a la consola H2 en: http://localhost:8080/h2-console
-
-Configuración de conexión:
-- JDBC URL: jdbc:h2:mem:testdb
-- Usuario: sa
-- Contraseña: password
-
-## 6. Postman Collection
-
-Se incluye una colección de Postman con todos los endpoints configurados para facilitar las pruebas.
-
-Archivo: `Prueba_Tecnica_Spring.postman_collection.json`
+- **POST /api/cifrado/cifrar**: Cifrar un texto
+  ![Post Cifrar texto](ScreenShots/Post%20Cifrar%20texto.png)
+  <div align="center"><em>Post Cifrar texto</em></div>
+- **POST /api/cifrado/descifrar**: Descifrar un texto
+  ![Post Descifrar texto](ScreenShots/Post%20Descifrar%20texto.png)
+  <div align="center"><em>Post Descifrar texto</em></div>
